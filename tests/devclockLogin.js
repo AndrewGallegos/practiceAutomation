@@ -14,3 +14,4 @@ module.exports = {
             .expect.element('//div[contains(@data-bind, "logout")]').to.be.visible.before(7000)
     }
 }
+//test comment
