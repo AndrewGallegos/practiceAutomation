@@ -8,21 +8,21 @@ module.exports = {
     after: browser => {
         browser.end()
     },
-    // 'QAE-52 Navigate Categories': browser => {
-    //     var terms = ['Recreational Vehicles', 'Outdoor Gear', 'Electronics', 'Party & Wedding Equipment',
-    //                 'Tools', 'Clothing', 'Home and Kitchen', 'Toys and Games', 'Lawn and Garden','Sporting Goods',
-    //                 'DVDs & Video Games', 'Venues', 'Local Experts', 'Experiences', 'Music',
-    //                 'Business Equipment', 'Misc']
-    //     for(var i = 0; i < 16; i++) {
-    //         var element = '(//*[@sectionheader])[last()-'
-    //         element = element.concat(16-i, ']/a/div')
-    //         browser
-    //             .click(element)
-    //             .waitForElementVisible('//*[contains(@class, "sc-jKVCRD jSqgxr")]', time=15000)
-    //             .expect.element('//*[contains(@class, "sc-jKVCRD jSqgxr")]').text.to.contain(terms[i])
-    //         browser.back()
-    //     }
-    // },
+    'QAE-52 Navigate Categories': browser => {
+        var terms = ['Recreational Vehicles', 'Outdoor Gear', 'Electronics', 'Party & Wedding Equipment',
+                    'Tools', 'Clothing', 'Home and Kitchen', 'Toys and Games', 'Lawn and Garden','Sporting Goods',
+                    'DVDs & Video Games', 'Venues', 'Local Experts', 'Experiences', 'Music',
+                    'Business Equipment', 'Misc']
+        for(var i = 0; i < 16; i++) {
+            var element = '(//*[@sectionheader])[last()-'
+            element = element.concat(16-i, ']/a/div')
+            browser
+                .click(element)
+                .waitForElementVisible('//*[contains(@class, "sc-jKVCRD jSqgxr")]', time=15000)
+                .expect.element('//*[contains(@class, "sc-jKVCRD jSqgxr")]').text.to.contain(terms[i])
+            browser.back()
+        }
+    },
     'QAE-53 Search for an Item': browser => {
         browser
             .setValue('//*[contains(@placeholder, "Search for an item")]', ['Rubix Cube', browser.Keys.ENTER])
