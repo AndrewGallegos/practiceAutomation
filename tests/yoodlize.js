@@ -1,12 +1,14 @@
+var page
 module.exports = {
     before: browser => {
-        browser.useXpath();
+        browser.useXpath()
+        page = browser.page.yoodlize()
     },
     beforeEach: browser => {
-        browser.url('http://alpha.yoodlize.com')
+        page.navigate('http://alpha.yoodlize.com')
     },
     after: browser => {
-        browser.end()
+        page.end()
     },
     'QAE-52 Navigate Categories': browser => {
         var terms = ['Recreational Vehicles', 'Outdoor Gear', 'Electronics', 'Party & Wedding Equipment',
@@ -14,29 +16,31 @@ module.exports = {
                     'DVDs & Video Games', 'Venues', 'Local Experts', 'Experiences', 'Music',
                     'Business Equipment', 'Misc']
         for(var i = 0; i < 16; i++) {
-            var element = '(//*[@sectionheader])[last()-'
-            element = element.concat(16-i, ']/a/div')
-            browser
+            var element = '(//*[@sectionheader])['
+            element = element.concat(i+1,']/a/div')
+            page
                 .click(element)
-                .waitForElementVisible('//*[contains(@class, "sc-jKVCRD jSqgxr")]', time=15000)
-                .expect.element('//*[contains(@class, "sc-jKVCRD jSqgxr")]').text.to.contain(terms[i])
-            browser.back()
+                .waitForElementVisible('@searchTag', time=15000)
+                .expect.element('@searchTag').text.to.contain(terms[i])
+            page.api.back()
         }
     },
     'QAE-53 Search for an Item': browser => {
-        browser
-            .setValue('//*[contains(@placeholder, "Search for an item")]', ['Rubix Cube', browser.Keys.ENTER])
-            .expect.element('//*[@class="sc-jKVCRD jSqgxr"]').text.to.contain('Rubix Cube')
-        browser.expect.element('//*[@id="keyword-search-input"]').value.to.equal('Rubix Cube')
-        browser
-            .click('//*[@class="_1DzFT col-lg-6 col-md-6 col-sm-12 col-xs-12"]')
-            .waitForElementVisible('//*[@class="sc-cJSrbW ipLTMg sc-TOsTZ eIqKCZ"]', time=15000)
-            .click('//*[@class="sc-cJSrbW ipLTMg sc-TOsTZ eIqKCZ"]')
-            .expect.element('//*[contains(@src, "a4d3"]')
-        browser
-            .click('//*[@class="sc-eerKOB dlQsDk"')
-            .expect.element('//*[contains(@src, "77ee"]')
-        browser.expect.element('//*[@class="sc-jqCOkK hxTVNb sc-gqjmRU fptSCa"').text.to.contain('Rubix Cube')
-        browser.expect.element('//*[@class="sc-jqCOkK ibHMcp sc-gqjmRU fptSCa"').text.to.contain('$22')
+        page
+            .setValue('@searchBar', ['Rubix Cube', browser.Keys.ENTER])
+            .expect.element('@searchTag').text.to.contain('Rubix Cube')
+        page.expect.element('@searchAgain').value.to.equal('Rubix Cube')
+        page
+            .click('@firstResult')
+            .waitForElementVisible('@rightArrow', time=15000)
+            .click('@rightArrow')
+            .expect.element('@listingImage').to.have.attribute('src')
+                .which.contains('a4d3')
+        page
+            .click('@leftArrow')
+            .expect.element('@listingImage').to.have.attribute('src')
+                .which.contains('77ee')
+        page.expect.element('@listingTitle').text.to.contain('Rubix Cube')
+        page.expect.element('@listingPrice').text.to.contain('$22')
     }
 }
